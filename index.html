@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #11111b;
+            color: #333;
+            line-height: 1.6;
+            padding: 0;
+        }
+
+        h1,
+        h2 {
+            font-weight: 500;
+        }
+
+        /* Header */
+        header {
+            background-color: #11111b;
+            color: #fff;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        header h1 {
+            font-size: 32px;
+            text-transform: uppercase;
+        }
+
+        /* Contact Form Section */
+        section.contact-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
+            background-color: #11111b;
+        }
+
+        .contact-form {
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            background-color: #8901cc;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        .contact-form h2 {
+            font-size: 26px;
+            color: #fff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            color: #fff;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            background-color: #f9f9f9;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-group button {
+            width: 100%;
+            padding: 15px;
+            background-color: #ef4066;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-group button:hover {
+            background-color: #e9034c;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Modal Styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .modal .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .modal .close:hover,
+        .modal .close:focus {
+            color: #ef4066;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .contact-form {
+                padding: 30px;
+            }
+
+            header h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>AHN Contact Form</h1>
+    </header>
+
+    <section class="contact-section">
+        <div class="contact-form">
+            <h2>Submit Your Query Here</h2>
+            <form id="contactForm" action="#">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                </div>
+                <div class="form-group">
+                    <label for="telegram">Your Telegram ID</label>
+                    <input type="text" id="telegram" name="telegram" placeholder="Your Telegram ID (optional)">
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" required placeholder="Enter your message here"></textarea>
+                </div>
+                <div class="form-group">
+                    <button type="submit">Send Message</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Abid Hasan Nir. All rights reserved.</p>
+    </footer>
+
+    <!-- Modal for success -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Message Sent Successfully!</h2>
+            <p>Your message has been successfully sent to us. Thank you!</p>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('contactForm');
+        const successModal = document.getElementById('successModal');
+        const closeModal = document.querySelector('.close');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const telegram = document.getElementById('telegram').value;
+            const message = document.getElementById('message').value;
+
+            const botToken = '7576971957:AAEGVCtKke0Bw0K9RduoOtsuf50nXmj5-vk';
+            const chatId = '5297881486';
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            const messageText = `
+                📩 *New message from Contact Form:*
+                *Name:* ${name}
+                *Email:* ${email}
+                *Telegram ID:* ${telegram ? telegram : 'N/A'}
+                *Message:*
+                ${message}
+            `;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: messageText,
+                    parse_mode: 'Markdown',  // Using Markdown to format the message
+                }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.ok) {
+                        // Show success modal
+                        successModal.style.display = "block";
+                        form.reset();
+                    } else {
+                        alert('Error sending message. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error sending message. Please try again.');
+                });
+        });
+
+        // Close the modal
+        closeModal.addEventListener('click', () => {
+            successModal.style.display = "none";
+        });
+
+        // Close the modal if the user clicks outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === successModal) {
+                successModal.style.display = "none";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
