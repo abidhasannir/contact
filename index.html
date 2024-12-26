@@ -215,8 +215,19 @@
         <p>&copy; 2024 Abid Hasan Nir. All rights reserved.</p>
     </footer>
 
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Message Sent Successfully!</h2>
+            <p>Your message has been successfully sent to us. Thank you for reaching out!</p>
+        </div>
+    </div>
+
     <script>
         const form = document.getElementById('contactForm');
+        const successModal = document.getElementById('successModal');
+        const closeModal = document.querySelector('.modal .close');
 
         form.addEventListener('submit', async function (e) {
             e.preventDefault();
@@ -236,25 +247,20 @@
                 console.error('Error fetching IP address:', error);
             }
 
-            const botToken = '7576971957:AAEGVCtKke0Bw0K9RduoOtsuf50nXmj5-vk';
-            const chatId = '5297881486';
+            const botToken = 'YOUR_BOT_TOKEN';
+            const chatId = 'YOUR_CHAT_ID';
             const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
             const messageText = `
 📩 *New Message from Contact Form* 📩
 
 👤 *Name:* ${name}
-
 ✉️ *Email:* ${email}
-
 🔹 *Telegram ID:* ${telegram ? telegram : 'N/A'}
-
 📝 *Message:*
+
 ${message}
-
 🌐 *IP Address:* ${ipAddress}
-
----
 
 💻 *Submitted on:* ${new Date().toLocaleString()}
 `;
@@ -273,7 +279,8 @@ ${message}
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        alert('Message sent successfully!');
+                        // Show success modal
+                        successModal.style.display = 'block';
                         form.reset();
                     } else {
                         alert('Error sending message. Please try again.');
@@ -283,6 +290,17 @@ ${message}
                     console.error('Error:', error);
                     alert('Error sending message. Please try again.');
                 });
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            successModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === successModal) {
+                successModal.style.display = 'none';
+            }
         });
     </script>
 
