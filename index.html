@@ -215,21 +215,10 @@
         <p>&copy; 2024 Abid Hasan Nir. All rights reserved.</p>
     </footer>
 
-    <!-- Modal for success -->
-    <div id="successModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Message Sent Successfully!</h2>
-            <p>Your message has been successfully sent to us. Thank you!</p>
-        </div>
-    </div>
-
     <script>
         const form = document.getElementById('contactForm');
-        const successModal = document.getElementById('successModal');
-        const closeModal = document.querySelector('.close');
 
-        form.addEventListener('submit', function (e) {
+        form.addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const name = document.getElementById('name').value;
@@ -237,18 +226,38 @@
             const telegram = document.getElementById('telegram').value;
             const message = document.getElementById('message').value;
 
-            const botToken = '7576971957:AAEGVCtKke0Bw0K9RduoOtsuf50nXmj5-vk';
-            const chatId = '5297881486';
+            // Fetch IP address
+            let ipAddress = 'Unknown';
+            try {
+                const ipResponse = await fetch('https://api.ipify.org?format=json');
+                const ipData = await ipResponse.json();
+                ipAddress = ipData.ip;
+            } catch (error) {
+                console.error('Error fetching IP address:', error);
+            }
+
+            const botToken = 'YOUR_BOT_TOKEN';
+            const chatId = 'YOUR_CHAT_ID';
             const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
             const messageText = `
-                📩 *New message from Contact Form:*
-                *Name:* ${name}
-                *Email:* ${email}
-                *Telegram ID:* ${telegram ? telegram : 'N/A'}
-                *Message:*
-                ${message}
-            `;
+📩 *New Message from Contact Form* 📩
+
+👤 *Name:* ${name}
+
+✉️ *Email:* ${email}
+
+🔹 *Telegram ID:* ${telegram ? telegram : 'N/A'}
+
+📝 *Message:*
+${message}
+
+🌐 *IP Address:* ${ipAddress}
+
+---
+
+💻 *Submitted on:* ${new Date().toLocaleString()}
+`;
 
             fetch(url, {
                 method: 'POST',
@@ -258,14 +267,13 @@
                 body: JSON.stringify({
                     chat_id: chatId,
                     text: messageText,
-                    parse_mode: 'Markdown',  // Using Markdown to format the message
+                    parse_mode: 'Markdown',
                 }),
             })
                 .then(response => response.json())
                 .then(data => {
                     if (data.ok) {
-                        // Show success modal
-                        successModal.style.display = "block";
+                        alert('Message sent successfully!');
                         form.reset();
                     } else {
                         alert('Error sending message. Please try again.');
@@ -275,18 +283,6 @@
                     console.error('Error:', error);
                     alert('Error sending message. Please try again.');
                 });
-        });
-
-        // Close the modal
-        closeModal.addEventListener('click', () => {
-            successModal.style.display = "none";
-        });
-
-        // Close the modal if the user clicks outside of it
-        window.addEventListener('click', (event) => {
-            if (event.target === successModal) {
-                successModal.style.display = "none";
-            }
         });
     </script>
 
